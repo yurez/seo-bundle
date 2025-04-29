@@ -5,12 +5,12 @@ namespace Gurtok\SeoBundle\Attribute;
 use Gurtok\SeoBundle\Model\Enum\TwitterCardType;
 
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
-class SeoMeta
+readonly class SeoMeta
 {
     public function __construct(
-        public readonly array|string|null $title = null,
-        public readonly array|string|null $description = null,
-        public readonly array|string|null $canonical = null,
+        public array|string|null $title = null,
+        public array|string|null $description = null,
+        public array|string|null $canonical = null,
         /**
          * @var array{
          *     title?: string|array,
@@ -20,7 +20,7 @@ class SeoMeta
          *     *     [string]: string, // if you want to add custom meta tags
          * }
          */
-        public readonly array $meta = [],
+        public array $meta = [],
         /**
          * @var array{
          *     title?: string|array,
@@ -32,7 +32,7 @@ class SeoMeta
          *     site_name?: string,
          * }
          */
-        public readonly array $og = [],
+        public array $og = [],
         /**
          * @var array{
          *     card?: string|TwitterCardType,
@@ -41,10 +41,10 @@ class SeoMeta
          *     image?: string,
          * }
          */
-        public readonly array $twitter = [],
-        public readonly array $verifications = [],
-        public readonly array $hreflangs = [],
-        public readonly array $structuredData = [],
+        public array $twitter = [],
+        public array $verifications = [],
+        public array $hreflangs = [],
+        public array $structuredData = [],
     ) {
     }
 }
