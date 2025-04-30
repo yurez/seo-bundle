@@ -18,7 +18,7 @@ Otherwise, manually add to `config/bundles.php`:
 
 ```php
 return [
-    Gurtok\SeoBundle\SeoBundle::class => ['all' => true],
+    Gurtok\SeoBundle\GurtokSeoBundle::class => ['all' => true],
 ];
 ```
 

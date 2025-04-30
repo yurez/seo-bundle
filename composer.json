@@ -44,7 +44,7 @@
     "extra": {
         "symfony": {
             "bundle": {
-                "Gurtok\\SeoBundle\\SeoBundle": "all"
+                "Gurtok\\SeoBundle\\GurtokSeoBundle": "all"
             }
         }
     },
