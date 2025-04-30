@@ -20,7 +20,7 @@ class SeoAttributeListener
     public function __construct(
         protected readonly SeoManager $seoManager,
         protected readonly RequestStack $requestStack,
-        protected readonly TranslatorInterface $translator,
+        protected readonly ?TranslatorInterface $translator,
         protected readonly string $defaultLocale = 'en',
         protected readonly bool $supportCustomMetaTags = false,
     ) {
@@ -119,7 +119,7 @@ class SeoAttributeListener
         string $defaultLocale = 'en',
     ): ?string {
         if (\is_string($value)) {
-            return $this->translator->trans($value);
+            return $this->translator?->trans($value) ?? $value;
         }
 
         if (\is_array($value)) {

@@ -25,7 +25,7 @@ return static function (ContainerConfigurator $configurator) {
         ->args([
             service(SeoManager::class),
             service('request_stack'),
-            service('translator'),
+            service('translator')->nullOnInvalid(),
             '%kernel.default_locale%',
             '%gurtok_seo.allow_custom_meta%',
         ])
