@@ -13,6 +13,11 @@ enum TwitterCardTag: string implements FromWithPrefixInterface
     case DESCRIPTION = 'twitter:description';
     case IMAGE = 'twitter:image';
 
+    public function isCard(): bool
+    {
+        return self::CARD === $this;
+    }
+
     protected static function prefix(): string
     {
         return 'twitter:';

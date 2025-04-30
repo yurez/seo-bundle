@@ -8,6 +8,7 @@ use Gurtok\SeoBundle\Model\Enum\MetaTag;
 use Gurtok\SeoBundle\Model\Enum\OpenGraphTag;
 use Gurtok\SeoBundle\Model\Enum\TwitterCardTag;
 use Gurtok\SeoBundle\Service\SeoManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -17,9 +18,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SeoAttributeListenerTest extends TestCase
 {
-    private SeoManager $seoManager;
+    private SeoManager&MockObject $seoManager;
     private RequestStack $requestStack;
-    private TranslatorInterface $translator;
+    private TranslatorInterface&MockObject $translator;
     private SeoAttributeListener $listener;
 
     protected function setUp(): void
@@ -53,7 +54,7 @@ class SeoAttributeListenerTest extends TestCase
                 verifications: ['google-site-verification' => 'code'],
                 hreflangs: ['en' => 'https://example.com']
             )]
-            public function __invoke()
+            public function __invoke(): void
             {
             }
         }, '__invoke'];
@@ -118,7 +119,7 @@ class SeoAttributeListenerTest extends TestCase
         $this->requestStack->push($request);
 
         $controller = [new class {
-            public function __invoke()
+            public function __invoke(): void
             {
             }
         }, '__invoke'];

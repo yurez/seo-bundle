@@ -14,8 +14,8 @@ use Twig\Environment;
 
 class SeoResponseListenerTest extends TestCase
 {
-    private Environment|MockObject $twig;
-    private SeoManager|MockObject $seoManager;
+    private Environment&MockObject $twig;
+    private SeoManager&MockObject $seoManager;
 
     protected function setUp(): void
     {
@@ -102,7 +102,7 @@ class SeoResponseListenerTest extends TestCase
 
         $listener->__invoke($event);
 
-        $this->assertStringNotContainsString('<meta', $response->getContent());
+        $this->assertStringNotContainsString('<meta', (string) $response->getContent());
     }
 
     public function testDoesNothingIfPathIsExcluded(): void
@@ -130,7 +130,7 @@ class SeoResponseListenerTest extends TestCase
 
         $listener->__invoke($event);
 
-        $this->assertStringNotContainsString('<meta', $response->getContent());
+        $this->assertStringNotContainsString('<meta', (string) $response->getContent());
     }
 
     public function testDoesNothingIfNoHeadTag(): void
@@ -158,6 +158,6 @@ class SeoResponseListenerTest extends TestCase
 
         $listener->__invoke($event);
 
-        $this->assertStringNotContainsString('<meta', $response->getContent());
+        $this->assertStringNotContainsString('<meta', (string) $response->getContent());
     }
 }

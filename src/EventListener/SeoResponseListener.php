@@ -12,6 +12,9 @@ use Twig\Environment as Twig;
 #[AsEventListener(event: KernelEvents::RESPONSE)]
 class SeoResponseListener
 {
+    /**
+     * @param array<string> $excludedPaths
+     */
     public function __construct(
         private readonly SeoManager $seoManager,
         private readonly Twig $twig,
@@ -75,7 +78,7 @@ class SeoResponseListener
 
     private function buildSeoHtml(): string
     {
-        return $this->twig->render('@SeoBundle/seo/full.html.twig', [
+        return $this->twig->render('@GurtokSeo/full.html.twig', [
             'seo' => $this->seoManager->get(),
         ]);
     }

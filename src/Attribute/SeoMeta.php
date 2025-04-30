@@ -7,10 +7,19 @@ use Gurtok\SeoBundle\Model\Enum\TwitterCardType;
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 class SeoMeta
 {
+    /**
+     * @param array<string, string>|string|null $title
+     * @param array<string, string>|string|null $description
+     * @param array<string, string|array<string, string>> $meta
+     * @param array<string, string|array<string, string>> $og
+     * @param array<string, string|array<string, string>|TwitterCardType> $twitter
+     * @param array<string, string> $verifications
+     * @param array<string, string> $hreflangs
+     */
     public function __construct(
         public readonly array|string|null $title = null,
         public readonly array|string|null $description = null,
-        public readonly array|string|null $canonical = null,
+        public readonly ?string $canonical = null,
         /**
          * @var array{
          *     title?: string|array,
@@ -30,21 +39,22 @@ class SeoMeta
          *     type?: string,
          *     locale?: string,
          *     site_name?: string,
+         *     *    [string]: string|array<string, string>
          * }
          */
         public readonly array $og = [],
         /**
          * @var array{
-         *     card?: string|TwitterCardType,
-         *     title?: string|array,
-         *     description?: string|array,
-         *     image?: string,
+         *      card?: string|TwitterCardType,
+         *      title?: string|array,
+         *      description?: string|array,
+         *      image?: string,
+         *      *   [string]: string|array<string, string>|TwitterCardType
          * }
          */
         public readonly array $twitter = [],
         public readonly array $verifications = [],
         public readonly array $hreflangs = [],
-        public readonly array $structuredData = [],
     ) {
     }
 }

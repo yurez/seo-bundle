@@ -3,7 +3,7 @@
 namespace Gurtok\SeoBundle\Model\Enum\Traits;
 
 /**
- * @method static cases():array
+ * @static array cases()
  */
 trait FromWithPrefixTrait
 {

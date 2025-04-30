@@ -12,6 +12,7 @@ class GurtokSeoExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
+        /** @var array<string, string|int|bool|float|array<string, string>|\UnitEnum|null> $config */
         $config = $this->processConfiguration($configuration, $configs);
 
         foreach ($config as $key => $value) {

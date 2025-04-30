@@ -79,9 +79,14 @@ class SeoManager
     public function addTwitter(TwitterCardTag $tag, TwitterCardType|string $value): static
     {
         if (TwitterCardTag::CARD === $tag && !$value instanceof TwitterCardType) {
-            $value = TwitterCardType::from($value)->value;
+            $value = TwitterCardType::from($value);
         }
-        $this->data->twitter[$tag->value] = $value;
+
+        if ($value instanceof TwitterCardType && !$tag->isCard()) {
+            throw new \InvalidArgumentException('Twitter card type should use just for card tag.');
+        }
+
+        $this->data->twitter[$tag->value] = $value instanceof TwitterCardType ? $value->value : $value;
 
         return $this;
     }
@@ -93,6 +98,9 @@ class SeoManager
         return $this;
     }
 
+    /**
+     * @param array<string, string> $hreflangs
+     */
     public function setHreflangs(array $hreflangs): static
     {
         $this->data->hreflangs = $hreflangs;
