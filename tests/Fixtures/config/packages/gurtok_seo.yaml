@@ -1,0 +1,83 @@
+gurtok_seo:
+    excluded_paths: [
+        '/excluded'
+    ]
+    defaults:
+        title:
+            en: 'Default title'
+            uk: 'Заголовок українською'
+            es: 'Título en español'
+        description:
+            uk: 'Опис українською'
+            default: 'Default description from Default'
+        auto_canonical: true
+        meta:
+            keywords:
+                en: 'seo, web, club'
+                uk: 'seo, веб, гурток'
+            charset: 'UTF-8'
+        og:
+            title:
+                en: 'Default og title'
+                uk: 'og заголовок українською'
+            description:
+                en: 'Default og description'
+                uk: 'og опис українською'
+            image: '/images/default.png'
+            url: 'https://example.com/canonical'
+        twitter:
+            title: 'Default twitter title like string'
+            description:
+                en: 'Default twitter description'
+                uk: 'twitter опис українською'
+            card: 'summary'
+        verifications:
+            google-site-verification: 'google_verification_code_default'
+
+when@adult:
+    gurtok_seo:
+        defaults:
+            is_adult_content: true
+
+when@noindex:
+    gurtok_seo:
+        defaults:
+            no_index: true
+
+when@noautocanonical:
+    gurtok_seo:
+        defaults:
+            auto_canonical: false
+
+when@simple:
+    gurtok_seo:
+        defaults:
+            title: 'Simple title'
+            description: 'Simple description'
+            meta:
+                title: 'Simple meta title'
+                keywords: 'simple, seo, test'
+                author: 'Simple Author'
+                viewport: 'width=device-width, initial-scale=1.0'
+            og:
+                title: 'Simple og title'
+                description: 'Simple og description'
+            twitter:
+                title: 'Simple twitter title'
+                description: 'Simple twitter description'
+                card: !php/enum Gurtok\SeoBundle\Model\Enum\TwitterCardType::SUMMARY_LARGE_IMAGE
+
+when@nodefaults:
+    gurtok_seo:
+        defaults: []
+
+when@custom:
+    gurtok_seo:
+        allow_custom_meta: true
+        defaults:
+            meta:
+                custom-meta: 'Custom Meta Value'
+
+when@noseo:
+    gurtok_seo:
+        auto_inject_response: false

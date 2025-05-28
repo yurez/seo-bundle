@@ -1,6 +1,6 @@
 <?php
 
-namespace Gurtok\SeoBundle\Tests\Model\Enum\Traits;
+namespace Gurtok\SeoBundle\Tests\Unit\Model\Enum\Traits;
 
 use Gurtok\SeoBundle\Model\Enum\FromWithPrefixInterface;
 use Gurtok\SeoBundle\Model\Enum\Traits\FromWithPrefixTrait;

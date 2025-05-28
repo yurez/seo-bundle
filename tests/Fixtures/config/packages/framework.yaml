@@ -1,0 +1,7 @@
+framework:
+    secret: test
+    default_locale: en
+    set_locale_from_accept_language: true
+    test: true
+    router:
+        resource: '%kernel.project_dir%/tests'

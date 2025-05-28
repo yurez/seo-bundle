@@ -1,6 +1,6 @@
 <?php
 
-namespace Gurtok\SeoBundle\Tests\Helper;
+namespace Gurtok\SeoBundle\Tests\Unit\Helper;
 
 use Gurtok\SeoBundle\Helper\EnumResolveHelper;
 use Gurtok\SeoBundle\Model\Enum\FromWithPrefixInterface;

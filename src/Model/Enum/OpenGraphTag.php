@@ -16,7 +16,7 @@ enum OpenGraphTag: string implements FromWithPrefixInterface
     case LOCALE = 'og:locale';
     case SITE_NAME = 'og:site_name';
 
-    protected static function prefix(): string
+    public static function prefix(): string
     {
         return 'og:';
     }

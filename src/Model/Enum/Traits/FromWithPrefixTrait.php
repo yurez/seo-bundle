@@ -7,6 +7,19 @@ namespace Gurtok\SeoBundle\Model\Enum\Traits;
  */
 trait FromWithPrefixTrait
 {
+    public function getCleanValue(): string|int
+    {
+        $value = $this->value;
+        if (\is_int($value)) {
+            return $value;
+        }
+        if (str_starts_with($value, static::prefix())) {
+            return substr($value, \strlen(static::prefix()));
+        }
+
+        return $value;
+    }
+
     public static function fromPrefixed(int|string $value): static
     {
         $value = static::normalizeValue($value);

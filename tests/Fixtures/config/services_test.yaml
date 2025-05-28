@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    Gurtok\SeoBundle\Tests\Fixtures\SeoServicesTestHelper:
+        autowire: true
+        autoconfigure: true
+
+    Gurtok\SeoBundle\Tests\Fixtures\TestController:
+        autoconfigure: true
+        autowire: true

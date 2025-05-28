@@ -18,7 +18,7 @@ enum TwitterCardTag: string implements FromWithPrefixInterface
         return self::CARD === $this;
     }
 
-    protected static function prefix(): string
+    public static function prefix(): string
     {
         return 'twitter:';
     }

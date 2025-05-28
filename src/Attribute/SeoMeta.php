@@ -9,6 +9,7 @@ class SeoMeta
 {
     /**
      * @param array<string, string>|string|null $title
+     * @param array<string, string>|string|null $titlePrefix
      * @param array<string, string>|string|null $description
      * @param array<string, string|array<string, string>> $meta
      * @param array<string, string|array<string, string>> $og
@@ -18,8 +19,11 @@ class SeoMeta
      */
     public function __construct(
         public readonly array|string|null $title = null,
+        public readonly ?string $titleSeparator = null,
+        public readonly array|string|null $titlePrefix = null,
         public readonly array|string|null $description = null,
         public readonly ?string $canonical = null,
+        public readonly bool $autoGenerateCanonical = true,
         /**
          * @var array{
          *     title?: string|array,
@@ -55,6 +59,9 @@ class SeoMeta
         public readonly array $twitter = [],
         public readonly array $verifications = [],
         public readonly array $hreflangs = [],
+        public readonly bool $noIndex = false,
+        public readonly bool $isAdultContent = false,
+        public readonly bool $disableDefaults = false,
     ) {
     }
 }

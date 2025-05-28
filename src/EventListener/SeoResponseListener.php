@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Twig\Environment as Twig;
 
 #[AsEventListener(event: KernelEvents::RESPONSE)]
-class SeoResponseListener
+final class SeoResponseListener
 {
     /**
      * @param array<string> $excludedPaths
@@ -54,7 +54,10 @@ class SeoResponseListener
             return;
         }
 
-        $updatedContent = str_replace('</head>', $seoHtml.'</head>', $content);
+        if (str_contains($content, '<title>')) {
+            $content = preg_replace('/(<title>.*?<\/title>)/i', '', $content);
+        }
+        $updatedContent = preg_replace('/<\/head>/i', $seoHtml.'</head>', $content ?: '', 1);
         $this->seoManager->markAsRendered();
 
         $response->setContent($updatedContent);
@@ -79,7 +82,7 @@ class SeoResponseListener
     private function buildSeoHtml(): string
     {
         return $this->twig->render('@GurtokSeo/full.html.twig', [
-            'seo' => $this->seoManager->get(),
+            'seo_manager' => $this->seoManager,
         ]);
     }
 }

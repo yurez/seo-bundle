@@ -10,3 +10,4 @@ parameters:
 
     checkExplicitMixed: true
     reportUnmatchedIgnoredErrors: true
+    treatPhpDocTypesAsCertain: false

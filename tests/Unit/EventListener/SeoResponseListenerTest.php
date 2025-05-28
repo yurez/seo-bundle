@@ -1,6 +1,6 @@
 <?php
 
-namespace Gurtok\SeoBundle\Tests\EventListener;
+namespace Gurtok\SeoBundle\Tests\Unit\EventListener;
 
 use Gurtok\SeoBundle\EventListener\SeoResponseListener;
 use Gurtok\SeoBundle\Service\SeoManager;

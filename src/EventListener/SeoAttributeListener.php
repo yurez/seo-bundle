@@ -7,29 +7,29 @@ use Gurtok\SeoBundle\Helper\EnumResolveHelper;
 use Gurtok\SeoBundle\Model\Enum\MetaTag;
 use Gurtok\SeoBundle\Model\Enum\OpenGraphTag;
 use Gurtok\SeoBundle\Model\Enum\TwitterCardTag;
-use Gurtok\SeoBundle\Model\Enum\TwitterCardType;
+use Gurtok\SeoBundle\Service\CanonicalUrlGenerator;
 use Gurtok\SeoBundle\Service\SeoManager;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsEventListener(event: KernelEvents::CONTROLLER)]
-class SeoAttributeListener
+final class SeoAttributeListener
 {
     public function __construct(
-        protected readonly SeoManager $seoManager,
-        protected readonly RequestStack $requestStack,
-        protected readonly ?TranslatorInterface $translator,
-        protected readonly string $defaultLocale = 'en',
-        protected readonly bool $supportCustomMetaTags = false,
+        private readonly SeoManager $seoManager,
+        private readonly CanonicalUrlGenerator $canonicalUrlGenerator,
+        private readonly bool $supportCustomMetaTags = false,
     ) {
     }
 
     public function __invoke(ControllerEvent $event): void
     {
         $controller = $event->getController();
+        if (\is_object($controller)) {
+            $controller = [$controller, '__invoke'];
+        }
         if (!\is_array($controller)) {
             return;
         }
@@ -60,58 +60,56 @@ class SeoAttributeListener
         }
         $attribute = $attribute->newInstance();
 
-        $locale = $this->requestStack->getMainRequest()?->getLocale() ?? $this->defaultLocale;
-
-        $this->processSeoMeta($attribute, $locale, $this->defaultLocale);
+        /** @var SeoMeta $attribute */
+        if ($attribute->disableDefaults) {
+            $this->seoManager->reset();
+        }
+        $this->processSeoMeta($attribute, $event->getRequest());
     }
 
-    protected function processSeoMeta(SeoMeta $seoMeta, string $locale, string $defaultLocale = 'en'): void
+    private function processSeoMeta(SeoMeta $seoMeta, Request $request): void
     {
-        if (null !== $seoMeta->title
-            && null !== $value = $this->resolveLocalizedValue($seoMeta->title, $locale, $defaultLocale)
-        ) {
-            $this->seoManager->setTitle($value);
+        if (null !== $seoMeta->title) {
+            $this->seoManager->setTitle($seoMeta->title);
         }
 
-        if (null !== $seoMeta->description
-            && null !== $value = $this->resolveLocalizedValue($seoMeta->description, $locale, $defaultLocale)
-        ) {
-            $this->seoManager->setDescription($value);
+        if (null !== $seoMeta->titleSeparator) {
+            $this->seoManager->setTitleSeparator($seoMeta->titleSeparator);
+        }
+
+        if (null !== $seoMeta->titlePrefix) {
+            $this->seoManager->setTitlePrefix($seoMeta->titlePrefix);
+        }
+
+        if (null !== $seoMeta->description) {
+            $this->seoManager->setDescription($seoMeta->description);
         }
 
         if (null !== $seoMeta->canonical) {
             $this->seoManager->setCanonical($seoMeta->canonical);
+        } elseif ($seoMeta->autoGenerateCanonical) {
+            $this->seoManager->setCanonical(
+                $this->canonicalUrlGenerator->generateFromRequest($request)
+            );
+        } else {
+            $this->seoManager->setCanonical(null);
         }
 
         foreach ($seoMeta->meta as $name => $content) {
+            /** @var MetaTag|string $name */
             $name = EnumResolveHelper::resolve($name, MetaTag::class, $this->supportCustomMetaTags);
-            /** @var MetaTag $name */
-            $content = $this->resolveLocalizedValue($content, $locale, $defaultLocale);
-            if (null === $content) {
-                continue;
-            }
             $this->seoManager->addMeta($name, $content);
         }
 
         foreach ($seoMeta->og as $property => $content) {
             /** @var OpenGraphTag $property */
             $property = EnumResolveHelper::resolve($property, OpenGraphTag::class);
-            $content = $this->resolveLocalizedValue($content, $locale, $defaultLocale);
-            if (null === $content) {
-                continue;
-            }
-            $this->seoManager->addOg($property, $content);
+            $this->seoManager->addOpenGraph($property, $content);
         }
 
         foreach ($seoMeta->twitter as $name => $content) {
             /** @var TwitterCardTag $name */
             $name = EnumResolveHelper::resolve($name, TwitterCardTag::class);
-            if (!$content instanceof TwitterCardType) {
-                $content = $this->resolveLocalizedValue($content, $locale, $defaultLocale);
-            }
-            if (null === $content) {
-                continue;
-            }
             $this->seoManager->addTwitter($name, $content);
         }
 
@@ -122,26 +120,13 @@ class SeoAttributeListener
         if ($seoMeta->hreflangs) {
             $this->seoManager->setHreflangs($seoMeta->hreflangs);
         }
-    }
 
-    /**
-     * @param array<string, string>|string|null $value
-     */
-    protected function resolveLocalizedValue(
-        array|string|null $value,
-        string $currentLocale,
-        string $defaultLocale = 'en',
-    ): ?string {
-        if (\is_string($value)) {
-            return $this->translator?->trans($value) ?? $value;
+        if ($seoMeta->isAdultContent) {
+            $this->seoManager->markContentAsAdult();
         }
 
-        if (\is_array($value)) {
-            return $value[$currentLocale]
-                ?? $value[$defaultLocale]
-                ?? reset($value) ?: null;
+        if ($seoMeta->noIndex) {
+            $this->seoManager->markAsNoIndex();
         }
-
-        return null;
     }
 }

@@ -1,0 +1,3 @@
+test_page:
+    path: /test-page
+    controller: Gurtok\SeoBundle\Tests\Fixtures\TestController
