@@ -1,6 +1,6 @@
 # Gurtok SeoBundle
 
-Modern and flexible SEO Bundle for Symfony 6/7 projects.  
+Modern and flexible SEO Bundle for Symfony 6/7 projects.
 Easily manage meta tags, OpenGraph, Twitter cards, canonical URLs, hreflangs, and verification tags.
 
 ---
@@ -13,7 +13,7 @@ Require the bundle via Composer:
 composer require gurtok/seo-bundle
 ```
 
-If you're using Symfony Flex, the bundle will be registered automatically.  
+If you're using Symfony Flex, the bundle will be registered automatically.
 Otherwise, manually add to `config/bundles.php`:
 
 ```php
@@ -31,13 +31,37 @@ Create a config file `config/packages/gurtok_seo.yaml`:
 ```yaml
 gurtok_seo:
     allow_custom_meta: false         # Allow setting custom meta tags (true/false)
-    auto_inject_response: true        # Auto-insert SEO meta into <head> if not manually called
-    excluded_paths:                   # Exclude specific paths from auto SEO injection
+    auto_inject_response: true       # Auto-insert SEO meta into <head> if not manually called
+    excluded_paths:
         - '/admin'
         - '/api'
+    canonical_excluded_query_keys:
+        - 'utm_source'
+        - 'utm_medium'
+        - 'utm_campaign'
+        - 'utm_term'
+        - 'utm_content'
+        - 'ref'
+        - 'fbclid'
+        - 'page'
+    defaults:
+        title: { en: 'Default Title', uk: 'Типовий заголовок' } # Default title for the site
+        title_separator: ' | '
+        description: { en: 'Default description', uk: 'Типовий опис' }
+        auto_canonical: true         # Automatically generate canonical URL
+        meta:
+            robots: 'index, follow'
+        og:
+            type: 'website'
+        twitter:
+            card: 'summary_large_image'
+        verifications:
+            google-site-verification: 'abc123'
+        no_index: false              # Set to true if the site should not be indexed by search engines
+        is_adult_content: false      # Set to true if the content is adult-oriented and will be marked as such
 ```
 
-**Note:**  
+**Note:**
 The default locale is automatically taken from `%kernel.default_locale%` (usually configured in `framework.yaml`).
 
 Example `framework.yaml`:
@@ -60,6 +84,8 @@ use Gurtok\SeoBundle\Attribute\SeoMeta;
 
 #[SeoMeta(
     title: 'Homepage',
+    titlePrefix: 'MySite',
+    titleSeparator: ' ~ ',
     description: 'Welcome to our amazing website!',
     canonical: 'https://example.com',
     meta: ['robots' => 'index, follow'],
@@ -72,7 +98,10 @@ use Gurtok\SeoBundle\Attribute\SeoMeta;
     hreflangs: [
         'en' => 'https://example.com',
         'uk' => 'https://example.com/uk'
-    ]
+    ],
+    noIndex: false,
+    isAdultContent: false,
+    disableDefaults: false
 )]
 public function __invoke()
 {
@@ -101,7 +130,7 @@ You can specify translations via arrays:
 )]
 ```
 
-The bundle automatically detects the current request locale (`RequestStack`) and uses the localized value.  
+The bundle automatically detects the current request locale (`RequestStack`) and uses the localized value.
 Fallback is the default locale from `%kernel.default_locale%`, or the first available value.
 
 ---
@@ -118,27 +147,54 @@ In your Twig layout (`base.html.twig`):
 
 This will render:
 
-- `<title>` tag
-- `<meta>` description
-- `<meta>` robots
-- OpenGraph tags
-- Twitter card tags
-- JSON-LD structured data (if configured)
-- Canonical link
-- Hreflang alternate links
-- Verification meta tags
+* `<title>` tag
+* `<meta>` description
+* `<meta>` robots
+* OpenGraph tags
+* Twitter card tags
+* Canonical link
+* Hreflang alternate links
+* Verification meta tags
+
+---
+
+### 🔍 Twig Functions
+
+| Twig Function        | Description                                            |
+| -------------------- | ------------------------------------------------------ |
+| `seo()`              | Renders everything (title + meta + OG + Twitter + etc) |
+| `seo_title()`        | Renders only `<title>` tag                             |
+| `seo_meta()`         | Renders only `<meta>` tags                             |
+| `seo_og()`           | Renders OpenGraph tags                                 |
+| `seo_open_graph()`   | Alias for `seo_og()`                                   |
+| `seo_twitter()`      | Renders Twitter card tags                              |
+| `seo_hreflangs()`    | Renders hreflang links                                 |
+| `seo_verification()` | Renders verification tags                              |
+
+---
+
+### ⚙️ Twig Function Options
+
+Functions `seo()` and `seo_meta()` accept an optional options array:
+
+```twig
+{{ seo({ include_title: true, skip_empty: true }) }}
+```
+
+* `include_title` (bool, default `true`) — whether to include the `<title>` tag.
+* `skip_empty` (bool, default `true`) — skip rendering empty meta fields.
 
 ---
 
 ## 🔥 Auto Injection (Optional)
 
-If you forget to call `{{ seo() }}` manually in Twig,  
-and `auto_inject_response` is enabled (default `true`),  
+If you forget to call `{{ seo() }}` manually in Twig,
+and `auto_inject_response` is enabled (default `true`),
 SeoBundle will automatically inject SEO meta before `</head>` during the HTTP Response phase.
 
 ---
 
-## 📚 Full Example
+## 📘 Full Example
 
 ```yaml
 # config/packages/gurtok_seo.yaml
@@ -195,4 +251,3 @@ Result in HTML:
 SeoBundle is open-sourced software licensed under the [MIT license](LICENSE).
 
 ---
-
