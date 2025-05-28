@@ -53,9 +53,6 @@ class MetaTagCollectionTest extends TestCase
     {
         $this->expectException(InvalidTagValueException::class);
 
-        /**
-         * @phpstan-ignore-next-line
-         */
         new MetaTagCollection([
             $tag => ['uk' => 123], // not string
         ]);
@@ -99,10 +96,8 @@ class MetaTagCollectionTest extends TestCase
     public function testSetInvalidLocalizedTag(): void
     {
         $this->expectException(InvalidTagValueException::class);
+
         $collection = new MetaTagCollection([]);
-        /**
-         * @phpstan-ignore-next-line
-         */
         $collection->set(MetaTag::TITLE, ['en' => 123]); // invalid value
     }
 

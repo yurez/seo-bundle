@@ -40,10 +40,8 @@ class TwitterTagCollectionTest extends TestCase
     public function testSetCardWithInvalidValues(mixed $value): void
     {
         $this->expectException(InvalidTagValueException::class);
+
         $collection = new TwitterTagCollection([]);
-        /**
-         * @phpstan-ignore-next-line
-         */
         $collection->set(TwitterCardTag::CARD, $value);
     }
 

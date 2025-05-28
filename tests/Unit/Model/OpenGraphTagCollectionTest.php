@@ -36,10 +36,8 @@ class OpenGraphTagCollectionTest extends TestCase
     public function testSetInvalidLocalizedTag(string $tag): void
     {
         $this->expectException(InvalidTagValueException::class);
+
         $collection = new OpenGraphTagCollection([]);
-        /**
-         * @phpstan-ignore-next-line
-         */
         $collection->set($tag, ['en' => 123]); // invalid value
     }
 

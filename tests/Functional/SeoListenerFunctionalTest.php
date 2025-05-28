@@ -5,6 +5,9 @@ namespace Gurtok\SeoBundle\Tests\Functional;
 use Gurtok\SeoBundle\Tests\Fixtures\TestKernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * @php
+ */
 class SeoListenerFunctionalTest extends WebTestCase
 {
     protected static function getKernelClass(): string

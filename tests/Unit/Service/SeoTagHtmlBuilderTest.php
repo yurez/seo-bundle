@@ -32,17 +32,11 @@ class SeoTagHtmlBuilderTest extends TestCase
         $this->seoManager
             ->method('getOpenGraphTag')
             ->willReturnCallback(function (OpenGraphTag|string $tag) {
-                /**
-                 * @phpstan-ignore-next-line
-                 */
                 return EnumResolveHelper::resolve($tag, OpenGraphTag::class)->value;
             });
         $this->seoManager
             ->method('getTwitterTag')
             ->willReturnCallback(function (TwitterCardTag|string $tag) {
-                /**
-                 * @phpstan-ignore-next-line
-                 */
                 return EnumResolveHelper::resolve($tag, TwitterCardTag::class)->value;
             });
 
