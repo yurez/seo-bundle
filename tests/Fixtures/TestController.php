@@ -3,6 +3,7 @@
 namespace Gurtok\SeoBundle\Tests\Fixtures;
 
 use Gurtok\SeoBundle\Attribute\SeoMeta;
+use Gurtok\SeoBundle\Service\SeoManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -153,6 +154,22 @@ class TestController extends AbstractController
         return new Response(
             content: '{"html": "<html><title>Json Response</title><head></head><body>Content</body></html>"}',
             headers: ['Content-Type' => 'application/json']
+        );
+    }
+
+    #[Route('/update-seo', name: 'seo_update')]
+    #[SeoMeta(
+        title: 'News',
+        description: 'This page will have its SEO attributes updated dynamically.',
+    )]
+    public function updateSeo(SeoManager $seoManager, Request $request): Response
+    {
+        $seoManager->setTitlePrefix('Post from database');
+
+        // This method is intentionally left empty to test dynamic SEO updates.
+        return new Response(
+            content: '<html><head></head><body>Dynamically Updated Content</body></html>',
+            headers: ['Content-Type' => 'text/html']
         );
     }
 }

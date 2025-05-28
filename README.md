@@ -3,6 +3,43 @@
 Modern and flexible SEO Bundle for Symfony 6/7 projects.
 Easily manage meta tags, OpenGraph, Twitter cards, canonical URLs, hreflangs, and verification tags.
 
+# 🧭 Roadmap (Post-2.0)
+
+## 🟥 Priority 1: Full SEO "out-of-the-box"
+
+- [ ] 🧩 Support `JsonLd` + `JsonLdMulti` rendering helpers
+- [ ] 🧠 Add schema.org presets (Article, Product, Event, etc.)
+- [ ] 🌐 Integrate with sitemap generator (e.g., via Symfony event or SitemapProviderInterface)
+- [ ] 🧷 Provide Google Tag Manager (GTM) support
+- [ ] 🧲 Provide Meta Pixel support (Facebook)
+
+## 🟧 Priority 2: Enhanced social sharing support
+
+- [ ] 🖼️ `og:image` object support: `url`, `width`, `height`, `alt`, `type`
+- [ ] 🎥 `og:video` support with full metadata
+- [ ] 🧵 Multiple `og:image` / `og:video` entries
+- [ ] 🎯 `og:type` configuration (article, product, etc.)
+- [ ] 📌 Pinterest meta tags (`pinterest:description`, `pinterest:image`)
+- [ ] 💼 LinkedIn-specific sharing optimization
+
+## 🟨 Priority 3: Developer Experience & Flexibility
+
+- [ ] 🧰 Symfony UX Component for real-time preview of tags in dev mode
+- [ ] 🧪 PHPUnit constraint: `assertSeoRenderedContains($tag)`
+- [ ] 🧬 Full extensibility via custom `SeoRenderStrategyInterface`
+- [ ] 📦 Export configuration to JSON/LD, XML for third-party SEO analysis
+- [ ] 📖 Recipe / packagist recipe for easy install with Flex
+
+## ✅ Done
+
+- [x] Rewrite listeners for flexibility and testability
+- [x] Add support for localized defaults (en/uk/…) and translatable attributes
+- [x] Add `SeoMetaRenderOptions` (include_title, skip_empty, etc.)
+- [x] Add `SeoTagHtmlBuilder` for rendering
+- [x] Add new SeoMeta flags (noIndex, disableDefaults, etc.)
+- [x] Add canonical generator with query filtering
+- [x] Add granular disabling via config/environment
+
 ---
 
 ## 📦 Installation
@@ -213,14 +250,18 @@ use Gurtok\SeoBundle\Attribute\SeoMeta;
 
 #[SeoMeta(
     title: 'Blog',
+    titleSeparator: ' * ',
     description: 'Latest articles and news.',
     og: ['title' => 'Blog OG', 'type' => 'website'],
     twitter: ['card' => 'summary'],
 )]
 class BlogController
 {
-    public function __invoke()
+    public function __invoke(SeoManager $seoManager)
     {
+        // get post data, from database or API
+        $seoManager->setTitlePrfix('Post Name');
+        
         // ...
     }
 }
@@ -237,7 +278,7 @@ Twig:
 Result in HTML:
 
 ```html
-<title>Blog</title>
+<title>Post * Blog</title>
 <meta name="description" content="Latest articles and news.">
 <meta property="og:title" content="Blog OG">
 <meta property="og:type" content="website">

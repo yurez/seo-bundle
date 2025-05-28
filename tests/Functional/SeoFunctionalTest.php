@@ -2,13 +2,12 @@
 
 namespace Gurtok\SeoBundle\Tests\Functional;
 
+use Gurtok\SeoBundle\EventListener\SeoDefaultsListener;
+use Gurtok\SeoBundle\EventListener\SeoResponseListener;
 use Gurtok\SeoBundle\Tests\Fixtures\TestKernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-/**
- * @php
- */
-class SeoListenerFunctionalTest extends WebTestCase
+class SeoFunctionalTest extends WebTestCase
 {
     protected static function getKernelClass(): string
     {
@@ -17,7 +16,7 @@ class SeoListenerFunctionalTest extends WebTestCase
 
     public function testListenerAddsMeta(): void
     {
-        $client = static::createClient();
+        $client = static::createClient(['environment' => 'default']);
 
         $client->request('GET', '/regular-page');
 
@@ -150,7 +149,7 @@ class SeoListenerFunctionalTest extends WebTestCase
 
     public function testListenerWithNoIndex(): void
     {
-        $client = static::createClient();
+        $client = static::createClient(['environment' => 'default']);
 
         $client->request('GET', '/no-index-page');
 
@@ -269,7 +268,7 @@ class SeoListenerFunctionalTest extends WebTestCase
 
     public function testExcludedRoutes(): void
     {
-        $client = static::createClient();
+        $client = static::createClient(['environment' => 'default']);
 
         $client->request('GET', '/excluded-page');
 
@@ -290,7 +289,7 @@ class SeoListenerFunctionalTest extends WebTestCase
 
     public function testWithoutAttribute(): void
     {
-        $client = static::createClient();
+        $client = static::createClient(['environment' => 'default']);
 
         $client->request(
             'GET',
@@ -368,6 +367,45 @@ class SeoListenerFunctionalTest extends WebTestCase
         );
         $this->assertStringNotContainsString(
             '<link rel="canonical"',
+            (string) $client->getResponse()->getContent()
+        );
+    }
+
+    public function testDisableListeners(): void
+    {
+        $client = static::createClient(['environment' => 'disable_listeners']);
+
+        $client->request('GET', '/regular-page');
+
+        $container = static::getContainer();
+
+        $this->assertFalse(
+            $container->has(SeoDefaultsListener::class),
+            'SeoDefaultsListener should not be loaded in this environment'
+        );
+
+        $this->assertFalse(
+            $container->has(SeoResponseListener::class),
+            'SeoResponseListener should not be loaded in this environment'
+        );
+    }
+
+    public function testSeoUpdate(): void
+    {
+        $client = static::createClient(['environment' => 'default']);
+
+        $client->request(
+            'GET',
+            '/update-seo',
+            server: [
+                'HTTP_ACCEPT_LANGUAGE' => 'es',
+            ]
+        );
+
+        self::assertResponseIsSuccessful();
+
+        $this->assertStringContainsString(
+            '<title>Post from database - News</title>',
             (string) $client->getResponse()->getContent()
         );
     }

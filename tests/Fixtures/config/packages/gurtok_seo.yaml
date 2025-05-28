@@ -1,38 +1,41 @@
-gurtok_seo:
-    excluded_paths: [
-        '/excluded'
-    ]
-    defaults:
-        title:
-            en: 'Default title'
-            uk: 'Заголовок українською'
-            es: 'Título en español'
-        description:
-            uk: 'Опис українською'
-            default: 'Default description from Default'
-        auto_canonical: true
-        meta:
-            keywords:
-                en: 'seo, web, club'
-                uk: 'seo, веб, гурток'
-            charset: 'UTF-8'
-        og:
+gurtok_seo: ~
+
+when@default:
+    gurtok_seo:
+        excluded_paths: [
+            '/excluded'
+        ]
+        defaults:
             title:
-                en: 'Default og title'
-                uk: 'og заголовок українською'
+                en: 'Default title'
+                uk: 'Заголовок українською'
+                es: 'Título en español'
             description:
-                en: 'Default og description'
-                uk: 'og опис українською'
-            image: '/images/default.png'
-            url: 'https://example.com/canonical'
-        twitter:
-            title: 'Default twitter title like string'
-            description:
-                en: 'Default twitter description'
-                uk: 'twitter опис українською'
-            card: 'summary'
-        verifications:
-            google-site-verification: 'google_verification_code_default'
+                uk: 'Опис українською'
+                default: 'Default description from Default'
+            auto_canonical: true
+            meta:
+                keywords:
+                    en: 'seo, web, club'
+                    uk: 'seo, веб, гурток'
+                charset: 'UTF-8'
+            og:
+                title:
+                    en: 'Default og title'
+                    uk: 'og заголовок українською'
+                description:
+                    en: 'Default og description'
+                    uk: 'og опис українською'
+                image: '/images/default.png'
+                url: 'https://example.com/canonical'
+            twitter:
+                title: 'Default twitter title like string'
+                description:
+                    en: 'Default twitter description'
+                    uk: 'twitter опис українською'
+                card: 'summary'
+            verifications:
+                google-site-verification: 'google_verification_code_default'
 
 when@adult:
     gurtok_seo:
@@ -79,5 +82,9 @@ when@custom:
                 custom-meta: 'Custom Meta Value'
 
 when@noseo:
+    gurtok_seo:
+        auto_inject_response: false
+
+when@disable_listeners:
     gurtok_seo:
         auto_inject_response: false

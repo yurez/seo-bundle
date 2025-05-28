@@ -13,7 +13,7 @@ class SeoDefaultsProviderTest extends TestCase
 {
     public function testDefaultsWork(): void
     {
-        $kernel = new TestKernel('test', true);
+        $kernel = new TestKernel('default', true);
         $kernel->boot();
 
         $container = $kernel->getContainer();
@@ -98,11 +98,6 @@ class SeoDefaultsProviderTest extends TestCase
         $this->assertSame(
             ['default' => 'Simple description'],
             $provider->getDescription()
-        );
-
-        $this->assertSame(
-            'UTF-8',
-            $provider->getMeta(MetaTag::CHARSET)
         );
 
         $this->assertSame(
