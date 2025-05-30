@@ -19,7 +19,7 @@ class SeoManager
     protected bool $isNoIndex = false;
 
     public function __construct(
-        protected LocalizedResolver $localizedResolver,
+        protected LocalizedResolverInterface $localizedResolver,
         protected readonly bool $supportCustomMetaTags = false,
     ) {
         $this->data = new SeoMetadata($this->supportCustomMetaTags);
@@ -33,7 +33,7 @@ class SeoManager
     public function reset(): static
     {
         if ($this->isRendered()) {
-            throw new \RuntimeException('Cannot reset already rendered soe parameters');
+            throw new \RuntimeException('Cannot reset already rendered seo parameters');
         }
         $this->data = new SeoMetadata($this->supportCustomMetaTags);
         $this->isAdultContent = false;
@@ -66,7 +66,7 @@ class SeoManager
 
     public function getTitle(): ?string
     {
-        return $this->localizedResolver->resolveValue($this->data->title);
+        return $this->resolve($this->data->title);
     }
 
     public function setTitleSeparator(string $value): static
@@ -93,7 +93,7 @@ class SeoManager
 
     public function getTitlePrefix(): ?string
     {
-        return $this->localizedResolver->resolveValue($this->data->titlePrefix);
+        return $this->resolve($this->data->titlePrefix);
     }
 
     public function getFullTitle(): ?string
@@ -119,7 +119,7 @@ class SeoManager
 
     public function getDescription(): ?string
     {
-        return $this->localizedResolver->resolveValue($this->data->description);
+        return $this->resolve($this->data->description);
     }
 
     public function setCanonical(?string $url): static
@@ -154,7 +154,7 @@ class SeoManager
     {
         $value = $this->data->meta->get($tag);
 
-        return $this->localizedResolver->resolveValue($value);
+        return $this->resolve($value);
     }
 
     public function getMetaTag(MetaTag|string $tag): string
@@ -188,7 +188,7 @@ class SeoManager
     {
         $value = $this->data->og->get($tag);
 
-        return $this->localizedResolver->resolveValue($value);
+        return $this->resolve($value);
     }
 
     public function getOpenGraphTag(OpenGraphTag|string $tag): string
@@ -230,7 +230,7 @@ class SeoManager
     {
         $value = $this->data->twitter->get($tag);
 
-        return $this->localizedResolver->resolveValue($value);
+        return $this->resolve($value);
     }
 
     public function getTwitterTag(TwitterCardTag|string $tag): string
@@ -305,5 +305,28 @@ class SeoManager
         $this->isNoIndex = true;
 
         return $this;
+    }
+
+    public function setTranslationDomain(?string $translationDomain): static
+    {
+        $this->localizedResolver->setTranslationDomain($translationDomain);
+
+        return $this;
+    }
+
+    public function setLocale(string $locale): static
+    {
+        $this->localizedResolver->setLocale($locale);
+
+        return $this;
+    }
+
+    /**
+     * Resolves a localized value, potentially translating it if necessary.
+     * @param array<string, string>|string|null $value
+     */
+    protected function resolve(array|string|null $value): ?string
+    {
+        return $this->localizedResolver->resolveValue($value);
     }
 }

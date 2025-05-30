@@ -5,7 +5,7 @@ namespace Gurtok\SeoBundle\Service;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class CanonicalUrlGenerator
+class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
 {
     /**
      * @param array<string> $excludedQueryKeys

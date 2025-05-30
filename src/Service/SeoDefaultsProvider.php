@@ -30,7 +30,8 @@ class SeoDefaultsProvider
          *     twitter?: array<string, array>,
          *     verifications?: array<string, string>,
          *     no_index?: bool,
-         *     is_adult_content?: bool
+         *     is_adult_content?: bool,
+         *     translation_domain?: string,
          * } $defaults
          */
         protected readonly array $defaults,
@@ -125,6 +126,11 @@ class SeoDefaultsProvider
         return $this->defaults['is_adult_content'] ?? false;
     }
 
+    public function getTranslationDomain(): ?string
+    {
+        return $this->defaults['translation_domain'] ?? null;
+    }
+
     /**
      * @phpstan-assert array{
      *      title?: string|array<string, string>,
@@ -136,7 +142,8 @@ class SeoDefaultsProvider
      *      twitter?: array<string, array<string, string>>,
      *      verifications?: array<string, string>,
      *      no_index?: bool,
-     *      is_adult_content?: bool
+     *      is_adult_content?: bool,
+     *      translation_domain?: string,
      *  } $defaults
      * @param array<string, array<string, string>|string|bool> $defaults
      */
@@ -176,6 +183,12 @@ class SeoDefaultsProvider
             && !\is_array($defaults['verifications'])
         ) {
             throw new \InvalidArgumentException('The "verifications" key in defaults must be an array.');
+        }
+        if (
+            isset($defaults['translation_domain'])
+            && !\is_string($defaults['translation_domain'])
+        ) {
+            throw new \InvalidArgumentException('The "translation_domain" key in defaults must be a string.');
         }
     }
 }

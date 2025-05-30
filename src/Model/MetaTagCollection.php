@@ -38,7 +38,6 @@ class MetaTagCollection extends TagCollection
             MetaTag::KEYWORDS->value => false,
             MetaTag::ROBOTS->value,
             MetaTag::VIEWPORT->value,
-            MetaTag::CHARSET->value,
             MetaTag::THEME_COLOR->value,
             MetaTag::GOOGLE->value,
             MetaTag::GOOGLEBOT->value,

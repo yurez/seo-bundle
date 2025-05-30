@@ -2,7 +2,7 @@
 
 namespace Gurtok\SeoBundle\EventListener;
 
-use Gurtok\SeoBundle\Service\CanonicalUrlGenerator;
+use Gurtok\SeoBundle\Service\CanonicalUrlGeneratorInterface;
 use Gurtok\SeoBundle\Service\SeoDefaultsProvider;
 use Gurtok\SeoBundle\Service\SeoManager;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -19,7 +19,7 @@ final class SeoDefaultsListener
     public function __construct(
         private readonly SeoManager $seoManager,
         private readonly SeoDefaultsProvider $seoDefaultsProvider,
-        private readonly CanonicalUrlGenerator $canonicalUrlGenerator,
+        private readonly CanonicalUrlGeneratorInterface $canonicalUrlGenerator,
         private readonly array $excludedPaths = [],
     ) {
     }
@@ -57,7 +57,8 @@ final class SeoDefaultsListener
             ->setTitleSeparator($this->seoDefaultsProvider->getTitleSeparator())
             ->setMetaCollection($this->seoDefaultsProvider->getMetaCollection())
             ->setOpenGraphCollection($this->seoDefaultsProvider->getOpenGraphCollection())
-            ->setTwitterCollection($this->seoDefaultsProvider->getTwitterCollection());
+            ->setTwitterCollection($this->seoDefaultsProvider->getTwitterCollection())
+            ->setTranslationDomain($this->seoDefaultsProvider->getTranslationDomain());
 
         foreach ($this->seoDefaultsProvider->getVerifications() as $name => $value) {
             $this->seoManager->addVerification($name, $value);

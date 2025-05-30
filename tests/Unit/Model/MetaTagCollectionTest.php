@@ -89,8 +89,8 @@ class MetaTagCollectionTest extends TestCase
     public function testSetStringTag(): void
     {
         $collection = new MetaTagCollection([]);
-        $collection->set(MetaTag::CHARSET, 'UTF-8');
-        $this->assertSame('UTF-8', $collection->get(MetaTag::CHARSET));
+        $collection->set(MetaTag::THEME_COLOR, 'black');
+        $this->assertSame('black', $collection->get(MetaTag::THEME_COLOR));
     }
 
     public function testSetInvalidLocalizedTag(): void
@@ -105,18 +105,18 @@ class MetaTagCollectionTest extends TestCase
     {
         $this->expectException(InvalidTagValueException::class);
         $collection = new MetaTagCollection([]);
-        $collection->set(MetaTag::CHARSET, ['en' => 'UTF-8']); // should be string
+        $collection->set(MetaTag::THEME_COLOR, ['en' => 'UTF-8']); // should be string
     }
 
     public function testAllReturnsAllTags(): void
     {
         $collection = new MetaTagCollection([]);
         $collection->set(MetaTag::TITLE, ['en' => 'Title']);
-        $collection->set(MetaTag::CHARSET, 'utf-8');
+        $collection->set(MetaTag::THEME_COLOR, 'red');
 
         $expected = [
             MetaTag::TITLE->value => ['en' => 'Title'],
-            MetaTag::CHARSET->value => 'utf-8',
+            MetaTag::THEME_COLOR->value => 'red',
         ];
 
         $this->assertSame($expected, $collection->all());
@@ -143,7 +143,6 @@ class MetaTagCollectionTest extends TestCase
         return [
             [MetaTag::ROBOTS->value],
             [MetaTag::VIEWPORT->value],
-            [MetaTag::CHARSET->value],
             [MetaTag::THEME_COLOR->value],
             [MetaTag::GOOGLE->value],
             [MetaTag::GOOGLEBOT->value],

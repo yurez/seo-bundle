@@ -6,7 +6,9 @@ use Gurtok\SeoBundle\EventListener\SeoAttributeListener;
 use Gurtok\SeoBundle\EventListener\SeoDefaultsListener;
 use Gurtok\SeoBundle\EventListener\SeoResponseListener;
 use Gurtok\SeoBundle\Service\CanonicalUrlGenerator;
+use Gurtok\SeoBundle\Service\CanonicalUrlGeneratorInterface;
 use Gurtok\SeoBundle\Service\LocalizedResolver;
+use Gurtok\SeoBundle\Service\LocalizedResolverInterface;
 use Gurtok\SeoBundle\Service\SeoDefaultsProvider;
 use Gurtok\SeoBundle\Service\SeoManager;
 use Gurtok\SeoBundle\Service\SeoTagHtmlBuilder;
@@ -30,7 +32,8 @@ return static function (ContainerConfigurator $configurator) {
             param('gurtok_seo.allow_custom_meta'),
         ]);
 
-    $services->set(LocalizedResolver::class)
+    $services->set(LocalizedResolverInterface::class)
+        ->set(LocalizedResolver::class)
         ->args(
             [
                 service('request_stack'),
@@ -39,7 +42,8 @@ return static function (ContainerConfigurator $configurator) {
             ]
         );
 
-    $services->set(CanonicalUrlGenerator::class)
+    $services->set(CanonicalUrlGeneratorInterface::class)
+        ->class(CanonicalUrlGenerator::class)
         ->args([
             service(UrlGeneratorInterface::class),
             param('gurtok_seo.canonical_excluded_query_keys'),
@@ -64,7 +68,7 @@ return static function (ContainerConfigurator $configurator) {
     $services->set(SeoAttributeListener::class)
         ->args([
             service(SeoManager::class),
-            service(CanonicalUrlGenerator::class),
+            service(CanonicalUrlGeneratorInterface::class),
             param('gurtok_seo.allow_custom_meta'),
         ]);
 

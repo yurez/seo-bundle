@@ -16,7 +16,7 @@ class TestController extends AbstractController
         titlePrefix: 'Regular Page',
         description: ['en' => 'Test Description English', 'fr' => 'Test Description French'],
         meta: [
-            'charset' => 'UTF-8',
+            'theme-color' => 'dark',
         ],
         og: [
             'title' => 'Test Open Graph Title',
@@ -53,6 +53,7 @@ class TestController extends AbstractController
         autoGenerateCanonical: false,
         meta: [
             'custom-tag' => 'custom-information',
+            'custom-tag-trans' => 'translated.custom.trans',
         ],
     )]
     public function custom(Request $request): Response
@@ -169,6 +170,32 @@ class TestController extends AbstractController
         // This method is intentionally left empty to test dynamic SEO updates.
         return new Response(
             content: '<html><head></head><body>Dynamically Updated Content</body></html>',
+            headers: ['Content-Type' => 'text/html']
+        );
+    }
+
+    #[Route('/trans-page', name: 'trans_page')]
+    #[SeoMeta(
+        titlePrefix: 'translated.page_title',
+    )]
+    public function transPage(Request $request): Response
+    {
+        return new Response(
+            content: '<html><head></head><body>Translation Test</body></html>',
+            headers: ['Content-Type' => 'text/html']
+        );
+    }
+
+    #[Route('/spec-trans-page', name: 'spec_trans_page')]
+    #[SeoMeta(
+        titlePrefix: 'translated.page_title',
+        translationDomain: 'specific_seo',
+    )]
+    public function specificTransDomainPage(Request $request): Response
+    {
+        // This method is intentionally left empty to test specific translation domain handling.
+        return new Response(
+            content: '<html><head></head><body>Specific Translation Domain Test</body></html>',
             headers: ['Content-Type' => 'text/html']
         );
     }

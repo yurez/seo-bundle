@@ -7,7 +7,7 @@ use Gurtok\SeoBundle\Helper\EnumResolveHelper;
 use Gurtok\SeoBundle\Model\Enum\MetaTag;
 use Gurtok\SeoBundle\Model\Enum\OpenGraphTag;
 use Gurtok\SeoBundle\Model\Enum\TwitterCardTag;
-use Gurtok\SeoBundle\Service\CanonicalUrlGenerator;
+use Gurtok\SeoBundle\Service\CanonicalUrlGeneratorInterface;
 use Gurtok\SeoBundle\Service\SeoManager;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +19,7 @@ final class SeoAttributeListener
 {
     public function __construct(
         private readonly SeoManager $seoManager,
-        private readonly CanonicalUrlGenerator $canonicalUrlGenerator,
+        private readonly CanonicalUrlGeneratorInterface $canonicalUrlGenerator,
         private readonly bool $supportCustomMetaTags = false,
     ) {
     }
@@ -127,6 +127,10 @@ final class SeoAttributeListener
 
         if ($seoMeta->noIndex) {
             $this->seoManager->markAsNoIndex();
+        }
+
+        if (null !== $seoMeta->translationDomain) {
+            $this->seoManager->setTranslationDomain($seoMeta->translationDomain);
         }
     }
 }

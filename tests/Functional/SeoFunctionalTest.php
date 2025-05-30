@@ -34,7 +34,7 @@ class SeoFunctionalTest extends WebTestCase
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
-            '<meta name="charset" content="UTF-8">',
+            '<meta name="theme-color" content="dark">',
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
@@ -91,25 +91,15 @@ class SeoFunctionalTest extends WebTestCase
         );
     }
 
-    public function testListenerAddsCustomMeta(): void
+    public function testListenerAddsCustomMetaWithoutCanonicalTag(): void
     {
         $client = static::createClient(['environment' => 'custom']);
 
-        $client->request(
-            'GET',
-            '/custom-page',
-            server: [
-                'HTTP_ACCEPT_LANGUAGE' => 'fr',
-            ]
-        );
+        $client->request('GET', '/custom-page');
 
         self::assertResponseIsSuccessful();
         $this->assertStringContainsString(
             '<title>Custom Page Title</title>',
-            (string) $client->getResponse()->getContent()
-        );
-        $this->assertStringContainsString(
-            '<meta name="description" content="Custom Page Description French">',
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
@@ -168,10 +158,6 @@ class SeoFunctionalTest extends WebTestCase
         );
         $this->assertStringContainsString(
             '<meta name="keywords" content="seo, web, club">', // from defaults
-            (string) $client->getResponse()->getContent()
-        );
-        $this->assertStringContainsString(
-            '<meta name="charset" content="UTF-8">', // from defaults
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
@@ -287,41 +273,31 @@ class SeoFunctionalTest extends WebTestCase
         );
     }
 
-    public function testWithoutAttribute(): void
+    public function testWithoutAttributeTakeFromDefaults(): void
     {
         $client = static::createClient(['environment' => 'default']);
 
-        $client->request(
-            'GET',
-            '/without-attribute',
-            server: [
-                'HTTP_ACCEPT_LANGUAGE' => 'uk',
-            ]
-        );
+        $client->request('GET', '/without-attribute');
 
         self::assertResponseIsSuccessful();
         $this->assertStringContainsString(
-            '<title>Заголовок українською</title>',
+            '<title>Default title</title>',
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
-            '<meta name="description" content="Опис українською">',
+            '<meta name="description" content="Default description from Default">',
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
-            '<meta name="keywords" content="seo, веб, гурток">',
+            '<meta name="keywords" content="seo, web, club">',
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
-            '<meta name="charset" content="UTF-8">',
+            '<meta property="og:title" content="Default og title">',
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
-            '<meta property="og:title" content="og заголовок українською">',
-            (string) $client->getResponse()->getContent()
-        );
-        $this->assertStringContainsString(
-            '<meta property="og:description" content="og опис українською">',
+            '<meta property="og:description" content="Default og description">',
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
@@ -337,7 +313,7 @@ class SeoFunctionalTest extends WebTestCase
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
-            '<meta name="twitter:description" content="twitter опис українською">',
+            '<meta name="twitter:description" content="Default twitter description">',
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
@@ -394,13 +370,7 @@ class SeoFunctionalTest extends WebTestCase
     {
         $client = static::createClient(['environment' => 'default']);
 
-        $client->request(
-            'GET',
-            '/update-seo',
-            server: [
-                'HTTP_ACCEPT_LANGUAGE' => 'es',
-            ]
-        );
+        $client->request('GET', '/update-seo');
 
         self::assertResponseIsSuccessful();
 

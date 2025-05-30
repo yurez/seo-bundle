@@ -10,7 +10,6 @@ enum MetaTag: string
     case ROBOTS = 'robots';
     case AUTHOR = 'author';
     case VIEWPORT = 'viewport';
-    case CHARSET = 'charset';
     case THEME_COLOR = 'theme-color';
     case GOOGLE = 'google';
     case GOOGLEBOT = 'googlebot';

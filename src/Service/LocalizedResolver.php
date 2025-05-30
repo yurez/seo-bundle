@@ -5,11 +5,12 @@ namespace Gurtok\SeoBundle\Service;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class LocalizedResolver
+class LocalizedResolver implements LocalizedResolverInterface
 {
     protected const DEFAULT_VALUE = 'default';
 
     protected ?string $locale = null;
+    protected ?string $translationDomain = null;
 
     public function __construct(
         protected RequestStack $requestStack,
@@ -43,6 +44,13 @@ class LocalizedResolver
         return null;
     }
 
+    public function setTranslationDomain(?string $translationDomain): static
+    {
+        $this->translationDomain = $translationDomain;
+
+        return $this;
+    }
+
     public function setLocale(string $locale): static
     {
         $this->locale = $locale;
@@ -63,6 +71,7 @@ class LocalizedResolver
 
         return $this->translator?->trans(
             $value,
+            domain: $this->translationDomain,
             locale: $this->getLocale()
         ) ?: $value;
     }

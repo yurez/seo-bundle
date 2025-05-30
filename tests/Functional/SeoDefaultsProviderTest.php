@@ -77,6 +77,7 @@ class SeoDefaultsProviderTest extends TestCase
         $this->assertTrue($provider->isAutoGenerateCanonical());
         $this->assertFalse($provider->isNoIndex());
         $this->assertFalse($provider->isAdultContent());
+        $this->assertSame('seo', $provider->getTranslationDomain());
     }
 
     public function testDefaultsWithSimpleValue(): void
@@ -148,6 +149,8 @@ class SeoDefaultsProviderTest extends TestCase
         );
 
         $this->assertSame('summary_large_image', $provider->getTwitter('card'));
+
+        $this->assertNull($provider->getTranslationDomain());
     }
 
     public function testDefaultsWithCustomMetaTags(): void

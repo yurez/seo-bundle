@@ -18,7 +18,6 @@ when@default:
                 keywords:
                     en: 'seo, web, club'
                     uk: 'seo, веб, гурток'
-                charset: 'UTF-8'
             og:
                 title:
                     en: 'Default og title'
@@ -36,6 +35,7 @@ when@default:
                 card: 'summary'
             verifications:
                 google-site-verification: 'google_verification_code_default'
+            translation_domain: 'seo'
 
 when@adult:
     gurtok_seo:
@@ -88,3 +88,18 @@ when@noseo:
 when@disable_listeners:
     gurtok_seo:
         auto_inject_response: false
+
+when@translation:
+    gurtok_seo:
+        defaults:
+            title: 'translated.title'
+            description: 'translated.description'
+            meta:
+                keywords: 'translated.keywords'
+            og:
+                title: 'translated.og_title'
+                description: 'translated.og_description'
+            twitter:
+                title: 'translated.twitter_title'
+                description: 'translated.twitter_description'
+            translation_domain: 'seo'
