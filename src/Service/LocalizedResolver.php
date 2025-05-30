@@ -24,10 +24,8 @@ class LocalizedResolver
     public function resolveValue(array|string|null $value): ?string
     {
         if (\is_string($value)) {
-            return $this->translator?->trans($value) ?: $value;
+            return $this->trans($value);
         }
-
-        $result = $value;
 
         if (\is_array($value)) {
             $result = $value[$this->getLocale()]
@@ -36,11 +34,13 @@ class LocalizedResolver
                 ?? reset($value) ?: null;
 
             if (isset($value[static::DEFAULT_VALUE]) || 1 === \count($value)) {
-                return $this->translator?->trans($result) ?? $result;
+                return $this->trans($result);
             }
+
+            return $result;
         }
 
-        return $result;
+        return null;
     }
 
     public function setLocale(string $locale): static
@@ -53,5 +53,17 @@ class LocalizedResolver
     protected function getLocale(): string
     {
         return $this->locale ?: $this->requestStack->getMainRequest()?->getLocale() ?: $this->defaultLocale;
+    }
+
+    protected function trans(?string $value): ?string
+    {
+        if (null === $value) {
+            return null;
+        }
+
+        return $this->translator?->trans(
+            $value,
+            locale: $this->getLocale()
+        ) ?: $value;
     }
 }
