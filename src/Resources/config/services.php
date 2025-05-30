@@ -7,6 +7,8 @@ use Gurtok\SeoBundle\EventListener\SeoDefaultsListener;
 use Gurtok\SeoBundle\EventListener\SeoResponseListener;
 use Gurtok\SeoBundle\Service\CanonicalUrlGenerator;
 use Gurtok\SeoBundle\Service\CanonicalUrlGeneratorInterface;
+use Gurtok\SeoBundle\Service\ImageUrlResolver;
+use Gurtok\SeoBundle\Service\ImageUrlResolverInterface;
 use Gurtok\SeoBundle\Service\LocalizedResolver;
 use Gurtok\SeoBundle\Service\LocalizedResolverInterface;
 use Gurtok\SeoBundle\Service\SeoDefaultsProvider;
@@ -28,12 +30,19 @@ return static function (ContainerConfigurator $configurator) {
 
     $services->set(SeoManager::class)
         ->args([
-            service(LocalizedResolver::class),
+            service(LocalizedResolverInterface::class),
             param('gurtok_seo.allow_custom_meta'),
+            service(ImageUrlResolverInterface::class)->nullOnInvalid(),
+        ]);
+
+    $services->set(ImageUrlResolverInterface::class)
+        ->class(ImageUrlResolver::class)
+        ->args([
+            service('request_stack'),
         ]);
 
     $services->set(LocalizedResolverInterface::class)
-        ->set(LocalizedResolver::class)
+        ->class(LocalizedResolver::class)
         ->args(
             [
                 service('request_stack'),

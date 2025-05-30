@@ -132,5 +132,62 @@ final class SeoAttributeListener
         if (null !== $seoMeta->translationDomain) {
             $this->seoManager->setTranslationDomain($seoMeta->translationDomain);
         }
+
+        $this->fallbackTitle($this->seoManager);
+        $this->fallbackDescription($this->seoManager);
+        $this->fallbackOgUrl($this->seoManager);
+    }
+
+    protected function fallbackTitle(SeoManager $seoManager): void
+    {
+        if (!$title = $seoManager->getFullTitle()) {
+            return;
+        }
+
+        if (
+            $seoManager->getOpenGraphCollection()->count() > 0
+            && !$seoManager->hasOpenGraph(OpenGraphTag::TITLE)
+        ) {
+            $seoManager->addOpenGraph(OpenGraphTag::TITLE, $title);
+        }
+
+        if (
+            $seoManager->getTwitterCollection()->count() > 0
+            && !$seoManager->hasTwitter(TwitterCardTag::TITLE)
+        ) {
+            $seoManager->addTwitter(TwitterCardTag::TITLE, $title);
+        }
+    }
+
+    protected function fallbackDescription(SeoManager $seoManager): void
+    {
+        if (!$description = $seoManager->getDescription()) {
+            return;
+        }
+
+        if (
+            $seoManager->getOpenGraphCollection()->count() > 0
+            && !$seoManager->hasOpenGraph(OpenGraphTag::DESCRIPTION)
+        ) {
+            $seoManager->addOpenGraph(OpenGraphTag::DESCRIPTION, $description);
+        }
+
+        if (
+            $seoManager->getTwitterCollection()->count() > 0
+            && !$seoManager->hasTwitter(TwitterCardTag::DESCRIPTION)
+        ) {
+            $seoManager->addTwitter(TwitterCardTag::DESCRIPTION, $description);
+        }
+    }
+
+    public function fallbackOgUrl(SeoManager $seoManager): void
+    {
+        if (
+            $seoManager->getOpenGraphCollection()->count() > 0
+            && !$seoManager->hasOpenGraph(OpenGraphTag::URL)
+            && $canonical = $seoManager->getCanonical()
+        ) {
+            $seoManager->addOpenGraph(OpenGraphTag::URL, $canonical);
+        }
     }
 }

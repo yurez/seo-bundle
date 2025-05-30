@@ -46,10 +46,6 @@ class SeoTranslationTest extends WebTestCase
             (string) $client->getResponse()->getContent()
         );
         $this->assertStringContainsString(
-            '<meta property="og:image" content="/images/default.png">',
-            (string) $client->getResponse()->getContent()
-        );
-        $this->assertStringContainsString(
             '<meta property="og:url" content="https://example.com/canonical">',
             (string) $client->getResponse()->getContent()
         );

@@ -33,6 +33,7 @@ when@default:
                     en: 'Default twitter description'
                     uk: 'twitter опис українською'
                 card: 'summary'
+                image: 'https://example.com/images/default.png'
             verifications:
                 google-site-verification: 'google_verification_code_default'
             translation_domain: 'seo'

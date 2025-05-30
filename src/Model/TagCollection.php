@@ -30,9 +30,12 @@ abstract class TagCollection implements TagCollectionInterface, \ArrayAccess, \I
         }
     }
 
+    /**
+     * @param \BackedEnum|string $offset
+     */
     public function offsetExists(mixed $offset): bool
     {
-        return isset($this->tags[$this->normalizeTagName($offset)]);
+        return isset($this->tags[$this->getTag($offset)]);
     }
 
     /**

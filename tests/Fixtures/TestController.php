@@ -28,7 +28,7 @@ class TestController extends AbstractController
             'card' => 'summary_large_image',
             'title' => 'Test Twitter Title',
             'description' => 'Test Twitter Description',
-            'image' => 'https://example.com/test-twitter-image.jpg',
+            'image' => '/test-twitter-image.jpg',
         ],
         verifications: [
             'google-site-verification' => 'test-google-verification',
@@ -42,6 +42,35 @@ class TestController extends AbstractController
     {
         return new Response(
             content: '<html><head><title>Regular Page</title></head><body>Test</body></html>',
+            headers: ['Content-Type' => 'text/html']
+        );
+    }
+
+    #[Route('/simple-page', name: 'simple_page')]
+    #[SeoMeta(
+        title: 'Simple Page Title',
+        description: 'This is a simple page with default SEO attributes.',
+        autoGenerateCanonical: true,
+        meta: [
+            'title' => 'Simple Page Title',
+            'description' => 'This is a simple page with default SEO attributes.',
+            'robots' => 'index, follow',
+        ],
+        og: [
+            'image' => '/images/simple-page-og-image.jpg',
+            'type' => 'article',
+        ],
+        twitter: [
+            'card' => 'summary',
+            'image' => 'http://example.com/images/simple-page-twitter-image.jpg',
+        ],
+        disableDefaults: true,
+    )]
+    public function simple(Request $request): Response
+    {
+        // This method is intentionally left empty to test default behavior auto generate SEO attributes.
+        return new Response(
+            content: '<html><head></head><body>Simple Content</body></html>',
             headers: ['Content-Type' => 'text/html']
         );
     }

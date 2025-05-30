@@ -19,8 +19,9 @@ class SeoManager
     protected bool $isNoIndex = false;
 
     public function __construct(
-        protected LocalizedResolverInterface $localizedResolver,
+        protected readonly LocalizedResolverInterface $localizedResolver,
         protected readonly bool $supportCustomMetaTags = false,
+        protected readonly ?ImageUrlResolverInterface $imageUrlResolver = null,
     ) {
         $this->data = new SeoMetadata($this->supportCustomMetaTags);
     }
@@ -150,6 +151,11 @@ class SeoManager
         return $this;
     }
 
+    public function hasMeta(MetaTag|string $tag): bool
+    {
+        return $this->data->meta->offsetExists($tag);
+    }
+
     public function getMeta(MetaTag|string $tag): ?string
     {
         $value = $this->data->meta->get($tag);
@@ -184,9 +190,18 @@ class SeoManager
         return $this;
     }
 
+    public function hasOpenGraph(OpenGraphTag|string $tag): bool
+    {
+        return $this->data->og->offsetExists($tag);
+    }
+
     public function getOpenGraph(OpenGraphTag|string $tag): ?string
     {
         $value = $this->data->og->get($tag);
+
+        if (\is_string($value) && OpenGraphTag::IMAGE->value === $this->getOpenGraphTag($tag)) {
+            return $this->resolveImageUrl($value);
+        }
 
         return $this->resolve($value);
     }
@@ -226,9 +241,18 @@ class SeoManager
         return $this;
     }
 
+    public function hasTwitter(TwitterCardTag|string $tag): bool
+    {
+        return $this->data->twitter->offsetExists($tag);
+    }
+
     public function getTwitter(TwitterCardTag|string $tag): ?string
     {
         $value = $this->data->twitter->get($tag);
+
+        if (\is_string($value) && TwitterCardTag::IMAGE->value === $this->getTwitterTag($tag)) {
+            return $this->resolveImageUrl($value);
+        }
 
         return $this->resolve($value);
     }
@@ -328,5 +352,14 @@ class SeoManager
     protected function resolve(array|string|null $value): ?string
     {
         return $this->localizedResolver->resolveValue($value);
+    }
+
+    protected function resolveImageUrl(string $url): ?string
+    {
+        if (!$this->imageUrlResolver) {
+            return $url;
+        }
+
+        return $this->imageUrlResolver->resolve($url);
     }
 }

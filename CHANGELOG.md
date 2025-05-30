@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2025-05-31
+
+### Added
+- ✅ `ImageUrlResolver` service to automatically resolve relative paths to absolute image URLs (e.g., for `og:image`, `twitter:image`).
+- ✅ `ImageUrlResolverInterface` to allow custom logic for resolving image URLs.
+- ✅ Automatic resolution of `og:image` and `twitter:image` values to absolute URLs if relative paths are provided.
+- ✅ Fallback for `og:url` if not explicitly defined.
+- ✅ Fallbacks for `og:title`, `twitter:title`, `og:description`, and `twitter:description` from general `title` and `description` values, respectively.
+- ✅ Listeners now populate missing SEO attributes automatically if possible.
+
+### Changed
+- ♻️ `SeoManager` constructor now accepts an optional `ImageUrlResolverInterface`. If not provided, default logic is used.
+- ♻️ Functional test class (`SeoFunctionalTest`) was refactored to extract common client initialization and response handling into a reusable method `getResponseContent`.
+
+### Removed
+- ❌ Nothing removed in this release.
+
+---
+
+ℹ️ **This release is fully backward-compatible.**
+
 ## [2.1.0] – 2025-05-30
 
 ### Added
