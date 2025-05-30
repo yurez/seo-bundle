@@ -27,14 +27,20 @@ class LocalizedResolver
             return $this->translator?->trans($value) ?: $value;
         }
 
+        $result = $value;
+
         if (\is_array($value)) {
-            return $value[$this->getLocale()]
+            $result = $value[$this->getLocale()]
                 ?? $value[$this->defaultLocale]
                 ?? $value[static::DEFAULT_VALUE]
                 ?? reset($value) ?: null;
+
+            if (isset($value[static::DEFAULT_VALUE]) || 1 === \count($value)) {
+                return $this->translator?->trans($result) ?? $result;
+            }
         }
 
-        return null;
+        return $result;
     }
 
     public function setLocale(string $locale): static
